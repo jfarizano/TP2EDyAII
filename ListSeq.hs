@@ -73,8 +73,17 @@ join :: [[a]] -> [a]
 join [] = []
 join (xs:yss) = append xs (join yss)
 
+contract :: (a -> a -> a) -> [a] -> [a]
+contract _ [] = []
+contract _ l@[x] = l
+contract f (x:y:xs) = let (z, zs) = f x y ||| contract f xs
+                      in z : zs
+
 reduce :: (a -> a -> a) -> a -> [a] -> a
-reduce f e xs = undefined
+reduce _ e [] = e
+reduce _ _ [x] = x
+reduce f e xs = let ys = contract f xs
+                in reduce f e ys
 
 scan :: (a -> a -> a) -> a -> [a] -> ([a], a)
 scan f b s = undefined
