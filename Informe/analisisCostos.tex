@@ -1,0 +1,138 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper, margin=2.54cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish, mexico]{babel}
+\usepackage[spanish]{layout}
+\usepackage[article]{ragged2e}
+\usepackage{textcomp}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\setlength{\parindent}{0pt}
+
+
+\title{Trabajo Práctico 2: Análisis de Costos}
+
+\author{Farizano, Juan Ignacio \and Mellino, Natalia}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section*{Implementación de Secuencias con Listas}
+
+%==============================================================================
+
+\subsection*{Función mapS}
+
+(completar xd)
+
+%==============================================================================
+
+\subsection*{Función appendS}
+
+\textbf{\underline{Trabajo:}} \\
+
+Sean $n$ y $m$ las longitudes de las listas que recibe como argumento
+la función \texttt{appendS}, podemos ver que la recurrencia para el
+trabajo nos queda expresada como:
+
+\begin{equation*}
+    W(n + m) = W(n + m - 1) + k
+\end{equation*}
+
+Donde $k$ es una constante. \\
+
+Podemos demostrar fácilmente por inducción que $W \in O(n+m)$:
+
+\begin{align*}
+    W(n + m) & = W(n + m - 1) + k \\
+             & \leq c(n + m - 1) + k \rightarrow \text{HI}\\
+             & \leq c(n + m) - c + k \\
+             & \leq c(n + m) \iff c \geq k
+\end{align*}
+
+Por lo tanto $W \in O(n + m)$ \\
+
+\textbf{\underline{Profundidad:}} \\
+
+Para la profundidad, la recurrencia nos queda expresada igual que la del
+trabajo:
+
+\begin{equation*}
+    S(n + m) = S(n + m - 1) + k \; \; \in O(n + m)
+\end{equation*}
+
+Es decir, tanto el trabajo como la profundidad de la función \texttt{appendS}
+son del orden de la suma de la longitud de ambas listas.
+
+%==============================================================================
+
+\subsection*{Función reduceS}
+
+\textbf{\underline{Trabajo:}} \\
+
+La recurrencia para \texttt{reduceS} la podemos expresar de la siguiente manera
+(recordemos que se asume que la función que recibe como argumento es de orden constante):
+\begin{equation*}
+    W(n) = W(\frac{n}{2}) + W_{contract}(n) + k
+\end{equation*}
+
+Ahora necesitamos saber que orden tiene $W_{contract}(n)$, observemos que su 
+recurrencia es de la forma:
+
+\begin{equation*}
+    W_{contract(n)} = W_{contract}(n-2) + k 
+\end{equation*}
+
+Podemos demostrar que $W_{contract} \in O(n)$:
+
+\begin{align*}
+    W_{contract}(n) & = W_{contract}(n - 2) + k \\
+             & \leq c(n - 2) + k \rightarrow \text{HI}\\
+             & \leq cn - 2c + k \\
+             & \leq cn \iff c \geq \frac{k}{2}
+\end{align*}
+
+Ahora, utilizando el tercer caso del \textbf{Teorema Maestro} podemos probar que
+$W(n) \in O(n \;lg\;n)$, debemos ver dos cosas: \\
+
+Sean $a = 1, \; b = 2$
+
+\begin{itemize}
+    \item Existe $\epsilon > 0$ tal que $f(n) \in \Omega(n^{lg_2 1 + \epsilon})$:
+          de hecho, como $f(n)$ es $O(n)$ basta tomar $\epsilon = 1$
+          y trivialmente se satisface la condición
+    \item  Existe $c < 1$ y $N \in \mathbb{N}$ tal que para todo $n > N$,
+           $1 \cdot f(\frac{n}{2}) \leq c \cdot f(n)$: nuevamente, como $f(n)$ es $O(n)$, 
+           podemos tomar $c = \frac{1}{2}$ y $N = 1$ y se cumple: $\frac{n}{2} \leq \frac{1}{2}n$. 
+\end{itemize}
+
+Entonces, como se cumplen las hipótesis del Teorema, podemos decir que $W \in O(f(n))$ y
+como $f(n) \in O(n)$, por transitividad, resulta $W \in O(n)$. \\
+
+\textbf{\underline{Profundidad:}} \\
+xd
+%==============================================================================
+
+\subsection*{Función scanS}
+
+(completar xd)
+
+%==============================================================================
+%==============================================================================
+
+\section*{Implementación de Secuencias con Arreglos}
+
+\subsection*{Función mapS}
+(completar xd)
+
+\subsection*{Función appendS}
+(completar xd)
+
+\subsection*{Función reduceS}
+(completar xd)
+
+\subsection*{Función scanS}
+(completar xd)
+
+\end{document}
