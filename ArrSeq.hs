@@ -75,11 +75,8 @@ contract f a = case n of
                         in if even n then x else append x (drop a (n - 1))
                 where n = lengthS a
 
-reduce'    :: (a -> a -> a) -> a -> A.Arr a -> a
-reduce' f e xs = let t = showtS xs in case t of 
-                                      EMPTY     -> e
-                                      ELT x     -> x
-                                      NODE l r -> f (reduce' f e l) (reduce' f e r)
+expand :: (a -> a -> a) -> A.Arr a -> A.Arr a -> Int -> A.Arr a
+expand f a b n = tabulateS (\i -> if even i then b ! (div i 2) else f (b ! (div i 2)) (a ! (i - 1))) n
 
 reduce :: (a -> a -> a) -> a -> A.Arr a -> a
 reduce f e a = case n of
@@ -88,42 +85,12 @@ reduce f e a = case n of
                 _ -> reduce f e (contract f a)
                 where n = lengthS a
 
--- scan :: (a -> a -> a) -> a -> A.Arr a -> (A.Arr a, a)
--- scan f e a = case n of
---               0 -> (singletonS e, e)
---               1 -> (a, a ! 0)
---               _ -> let 
---                     (b, x) = scan f e (contract f e a)
---                     in tabulate (\i -> if even i then b !
---             where n = lengthS a
-
--- contract :: (a -> a -> a) -> a -> A.Arr a -> A.Arr a
--- contract f e a = case n of
---                  1 -> a
---                  _ -> let (b, bs) = (f (a ! 0) (a ! 1)) ||| (contract f e (dropS a 2))
---                       in appendS (singletonS b) bs
---                 where n = lengthS a
-
--- [1, 2] [3] [4, 5] [6]
--- [1, 2] [3, 4] [5, 6] 
-
--- [1, 2, 3, 4, 5, 6] -> [1 - 2, 3 -4, 5 - 6] = [-1, -1, -1] -> [0, -1] -> [1]
--- [1, 2, 3, 4, 5, 6] +
-
--- (1 + 2) + (3 + 4) + (5 + 6)
-
--- tabulate 3 f --> 
-
--- n = 3, 
-
--- f i = a[2i] + a[2i+1] i = 0...2
-
--- i = 0 -> a0 + a1
--- i = 1 -> a2 + a3
--- i = 2 -> a4 + a5
-
--- f i = if i = n/2 - 1 then last
---       else a[2i] + a[2i+1]
-
--- g :: (a -> a -> a) -> A.Arr a -> Int -> a
--- g f a i = 
+scan :: (a -> a -> a) -> a -> A.Arr a -> (A.Arr a, a)
+scan f e a = case n of
+              0 -> (singletonS e, e)
+              1 -> (singletonS e, f e (a ! 0))
+              _ -> let 
+                    (b, x) = scan f e (contract f a)
+                    c = expand f a b n
+                    in  (c, x)
+            where n = lengthS a
