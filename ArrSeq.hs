@@ -21,7 +21,7 @@ instance Seq A.Arr where
   showlS = showl
   joinS = A.flatten
   reduceS = reduce
-  scanS = undefined
+  scanS = scan
   fromList = A.fromList
 
 map :: (a -> b) -> A.Arr a -> A.Arr b
@@ -67,13 +67,16 @@ showl a = case n of
             _ -> CONS (a ! 0) (drop a 1)
             where n = lengthS a
 
+g :: (a -> a -> a) -> Int -> Int -> A.Arr a -> a
+g f n i a = if odd n && (2 * i) == (n - 1)  then a ! (n - 1)
+            else f (a ! (2 * i)) (a ! (2 * i + 1))
+
 contract :: (a -> a -> a) -> A.Arr a -> A.Arr a
 contract f a = case n of
                   1 -> a
-                  _ -> let  
-                        x = tabulateS (\i -> f (a ! (2 * i)) (a ! (2 * i + 1))) (div n 2)
-                        in if even n then x else append x (drop a (n - 1))
+                  _ -> tabulateS (\i -> g f n i a) mid
                 where n = lengthS a
+                      mid = if even n then (div n 2) else (div n 2) + 1
 
 expand :: (a -> a -> a) -> A.Arr a -> A.Arr a -> Int -> A.Arr a
 expand f a b n = tabulateS (\i -> if even i then b ! (div i 2) else f (b ! (div i 2)) (a ! (i - 1))) n
@@ -81,7 +84,7 @@ expand f a b n = tabulateS (\i -> if even i then b ! (div i 2) else f (b ! (div 
 reduce :: (a -> a -> a) -> a -> A.Arr a -> a
 reduce f e a = case n of
                 0 -> e
-                1 -> a ! 0
+                1 -> f e (a ! 0)
                 _ -> reduce f e (contract f a)
                 where n = lengthS a
 

@@ -10,34 +10,81 @@
 \setlength{\parindent}{0pt}
 
 
-\title{Trabajo Práctico 2: Análisis de Costos}
+\title{Trabajo Práctico 2 EDyAII \\
+        \large Análisis de Costos
+}
 
 \author{Farizano, Juan Ignacio \and Mellino, Natalia}
 \date{}
 
+%==============================================================================
+%==============================================================================
+%==============================================================================
+
 \begin{document}
 \maketitle
 
-\section*{Implementación de Secuencias con Listas}
+\noindent\rule{\textwidth}{1pt}
+\section{Implementación de Secuencias con Listas}
 
 %==============================================================================
 
-\subsection*{Función mapS}
+\subsection{Función mapS}
+Sea $xs = [x_{\vert xs \vert -1},...,x_0]$ una lista, $n = \vert xs \vert$ su longitud
+y sea $f$ la función que toma \texttt{mapS} como argumento. 
 
-(completar xd)
-
-%==============================================================================
-
-\subsection*{Función appendS}
-
-\textbf{\underline{Trabajo:}} \\
-
-Sean $n$ y $m$ las longitudes de las listas que recibe como argumento
-la función \texttt{appendS}, podemos ver que la recurrencia para el
-trabajo nos queda expresada como:
+\subsubsection{Trabajo:}
+La recurrencia para el trabajo la podemos expresar de la siguiente manera:
 
 \begin{equation*}
-    W(n + m) = W(n + m - 1) + k
+    W_{mapS}(n) = W_f(x_{n- 1}) + W_{mapS}(n - 1) + k
+\end{equation*}
+
+Donde $k$ es una constante, y $x$ es la cabeza de la lista. \\
+
+Demostramos por inducción que $ W_{mapS} \in O\left(\displaystyle\sum_{i=0}^{n - 1}W_f(x_i) - k\right) $
+
+\begin{align*}
+    W_{mapS}(n) & = W_f(x_{n - 1}) + W_{mapS}(n - 1) + k \\
+               & \leq W_f(x_{n - 1}) + c \cdot (\displaystyle\sum_{i=0}^{n - 2}W_f(x_i) - k) + k \rightarrow \text{HI} \\
+               & \leq c \cdot  W_f(x_{n - 1}) + c \cdot \displaystyle\sum_{i=0}^{n - 2}W_f(x_i) - c \cdot k + k \\
+               & \leq c \cdot \displaystyle\sum_{i=0}^{n - 1}W_f(x_i) \iff c \geq 1
+\end{align*}
+
+Por lo tanto como $ W_{mapS} \in O\left(\displaystyle\sum_{i=0}^{n - 1}W_f(x_i) - k\right) $,
+luego podemos decir que $ W_{mapS} \in O\left(\displaystyle\sum_{i=0}^{n - 1}W_f(x_i)\right) $
+
+\subsubsection{Profundidad:}
+
+Para la profundidad, la recurrencia la podemos expresar de la siguiente manera:
+
+\begin{equation*}
+    S_{mapS}(n) = max(S_f(x_{n- 1}), S_{mapS}(n - 1)) + k
+\end{equation*}
+
+Podemos demostrar también que $ S_{mapS} \in O\left(\displaystyle\sum_{i=0}^{n - 1}S_f(x_i)\right) $:
+
+\begin{align*}
+    S_{mapS}(n) & = max(S_f(x_{n- 1}), S_{mapS}(n - 1)) + k \\
+               & \leq S_f(x_{n- 1}) + S_{mapS}(n - 1) + k
+\end{align*}
+
+Si observamos la ecuación anterior, podemos ver que se obtuvo una similar
+a la del trabajo, por lo tanto, el análisis de la profundidad se realiza
+de la misma manera que en el trabajo. Entonces podemos concluir que 
+$ S_{mapS} \in O\left(\displaystyle\sum_{i=0}^{n - 1}S_f(x_i)\right) $.
+
+%==============================================================================
+
+\subsection{Función appendS}
+
+Sean $n$ y $m$ las longitudes de las listas que recibe como argumento
+la función \texttt{appendS}. 
+\subsubsection{Trabajo:}
+Podemos ver que la recurrencia para el trabajo nos queda expresada como:
+
+\begin{equation*}
+    W_{appendS}(n + m) = W_{appendS}(n + m - 1) + k
 \end{equation*}
 
 Donde $k$ es una constante. \\
@@ -45,21 +92,21 @@ Donde $k$ es una constante. \\
 Podemos demostrar fácilmente por inducción que $W \in O(n+m)$:
 
 \begin{align*}
-    W(n + m) & = W(n + m - 1) + k \\
+    W_{appendS}(n + m) & = W_{appendS}(n + m - 1) + k \\
              & \leq c(n + m - 1) + k \rightarrow \text{HI}\\
              & \leq c(n + m) - c + k \\
              & \leq c(n + m) \iff c \geq k
 \end{align*}
 
-Por lo tanto $W \in O(n + m)$ \\
+Por lo tanto $W_{appendS} \in O(n + m)$ \\
 
-\textbf{\underline{Profundidad:}} \\
+\subsubsection{Profundidad:}
 
 Para la profundidad, la recurrencia nos queda expresada igual que la del
 trabajo:
 
 \begin{equation*}
-    S(n + m) = S(n + m - 1) + k \; \; \in O(n + m)
+    S_{appendS}(n + m) = S_{appendS}(n + m - 1) + k \; \; \in O(n + m)
 \end{equation*}
 
 Es decir, tanto el trabajo como la profundidad de la función \texttt{appendS}
@@ -67,14 +114,14 @@ son del orden de la suma de la longitud de ambas listas.
 
 %==============================================================================
 
-\subsection*{Función reduceS}
-
-\textbf{\underline{Trabajo:}} \\
+\subsection{Función reduceS}
+Sea $n$ la longitud de la lista que \texttt{reduceS} recibe como argumento.
+\subsubsection{Trabajo:}
 
 La recurrencia para \texttt{reduceS} la podemos expresar de la siguiente manera
 (recordemos que se asume que la función que recibe como argumento es de orden constante):
 \begin{equation*}
-    W(n) = W(\frac{n}{2}) + W_{contract}(n) + k
+    W_{reduceS}(n) = W(\frac{n}{2}) + W_{contract}(n) + k
 \end{equation*}
 
 Ahora necesitamos saber que orden tiene $W_{contract}(n)$, observemos que su 
@@ -94,9 +141,9 @@ Podemos demostrar que $W_{contract} \in O(n)$:
 \end{align*}
 
 Ahora, utilizando el tercer caso del \textbf{Teorema Maestro} podemos probar que
-$W(n) \in O(n \;lg\;n)$, debemos ver dos cosas: \\
+$W_{reduceS}(n) \in O(n)$, debemos ver dos cosas: \\
 
-Sean $a = 1, \; b = 2$
+Sean $a = 1, \; b = 2$ y $f(n) = W_{contract}(n)$
 
 \begin{itemize}
     \item Existe $\epsilon > 0$ tal que $f(n) \in \Omega(n^{lg_2 1 + \epsilon})$:
@@ -107,32 +154,141 @@ Sean $a = 1, \; b = 2$
            podemos tomar $c = \frac{1}{2}$ y $N = 1$ y se cumple: $\frac{n}{2} \leq \frac{1}{2}n$. 
 \end{itemize}
 
-Entonces, como se cumplen las hipótesis del Teorema, podemos decir que $W \in O(f(n))$ y
-como $f(n) \in O(n)$, por transitividad, resulta $W \in O(n)$. \\
+Entonces, como se cumplen las hipótesis del tercer caso Teorema Maestro,
+podemos decir que $W_{reduceS} \in O(f(n))$ y como $f(n) \in O(n)$, por transitividad,
+resulta $W_{reduceS} \in O(n)$. \\
 
-\textbf{\underline{Profundidad:}} \\
-xd
+\subsubsection{Profundidad:}
+
+Para la profundidad tenemos la siguiente recurrencia:
+
+\begin{equation*}
+    S_{reduceS}(n) = max(S_{contract}(n), S_{reduceS}(\frac{n}{2})) + k
+\end{equation*}
+
+Podemos ver que también, $S \in O(n)$:
+
+\begin{align*}
+    S_{reduceS}(n) & = max(S_{contract}(n), S_{reduceS}(\frac{n}{2})) + k \\
+                   & \leq S_{contract}(n) + S_{reduceS}(\frac{n}{2}) + k
+\end{align*}
+
+Observemos que ahora la recurrencia nos quedo expresada de manera similar
+a la del trabajo, por lo tanto, viendo el análisis anterior podemos 
+concluir que $S_{reduceS} \in O(n)$.
+
 %==============================================================================
 
-\subsection*{Función scanS}
+\subsection{Función scanS}
+\subsubsection{Trabajo:}
 
-(completar xd)
+\subsubsection{Profundidad:}
 
 %==============================================================================
 %==============================================================================
+%==============================================================================
 
-\section*{Implementación de Secuencias con Arreglos}
+\section{Implementación de Secuencias con Arreglos}
 
-\subsection*{Función mapS}
-(completar xd)
+Por especificación tenemos que
+\begin{align*}
+& W_{tabulate}(f \; n) \in O\left(\displaystyle\sum_{i=0}^{n - 1}W_f(i)\right) \\
+& S_{tabulate}(f \; n) \in O\left(\displaystyle\max_{i=0}^{n - 1}S_f(i)\right)
+\end{align*}
 
-\subsection*{Función appendS}
-(completar xd)
+\subsection{Función mapS}
 
-\subsection*{Función reduceS}
-(completar xd)
+Sea $f$ la función que se recibe como argumento, y $n$ la longitud del arreglo
+sobre el cual se evaluará $f$ sobre sus elementos.
+\subsubsection{Trabajo:}
+ 
+La recurrencia para el trabajo de la función \texttt{mapS} la podemos
+expresar como sigue:
 
-\subsection*{Función scanS}
-(completar xd)
+\begin{equation*}
+    W_{mapS}(f \; n) = W_{tabulate}(f \; n) + \underbrace{W_{length}(n)}_{\in \; O(1)} + k
+\end{equation*} 
+
+Por lo tanto $ W_{mapS}(f \; n) \in O\left(\displaystyle\sum_{i=0}^{n - 1}W_f(i)\right) $
+
+\subsubsection{Profundidad:}
+
+Luego, para la profundidad tenemos la siguiente recurrencia:
+
+\begin{equation*}
+    S_{mapS}(f \; n) = S_{tabulate}(f \; n) + \underbrace{S_{length}(n)}_{\in \; O(1)} + k
+\end{equation*} 
+
+Por lo tanto $ S_{mapS}(f \; n) \in O\left(\displaystyle\max_{i=0}^{n - 1}S_f(i)\right) $
+
+%==============================================================================
+
+\subsection{Función appendS}
+Sea $n$ y $m$ la longitudes de los arreglos que reciben \texttt{appendS} como
+argumento. 
+\subsubsection{Trabajo:}
+
+Podemos expresar la recurrencia para el trabajo de \texttt{appendS} de 
+la siguiente manera:
+
+\begin{equation*}
+    W_{appendS}(n + m) = W_{tabulate}(f \; (n \; +\; m)) + \underbrace{W_{length}(n)}_{\in \; O(1)}
+    + \underbrace{W_{length}(m)}_{\in \; O(1)} + k
+\end{equation*}
+
+Podemos ver fácilmente que la función que recibe \texttt{tabulateS} como
+argumento, es $O(1)$ ya que simplemente toma un índice y devuelve el 
+elemento de la lista que corresponde. Por lo tanto:
+
+\begin{align*}
+    W_{appendS}(n + m) \in O\left(\displaystyle\sum_{i=0}^{n + m - 1}W_f(i)\right)
+    \Rightarrow W_{appendS}(n + m) \in O(n + m)
+\end{align*}
+
+\subsubsection{Profundidad:}
+Podemos expresar la recurrencia para la profundidad de \texttt{appendS} de 
+la siguiente manera:
+
+\begin{equation*}
+    S_{appendS}(n + m) = S_{tabulate}(f \; (n \; +\; m)) + \underbrace{S_{length}(n)}_{\in \; O(1)}
+    + \underbrace{S_{length}(m)}_{\in \; O(1)} + k
+\end{equation*}
+
+Igualmente al trabajo $f \in O(1)$, por lo tanto:
+\begin{align*}
+    S_{appendS}(n + m) \in O\left(\displaystyle\max_{i=0}^{n + m - 1}S_f(i)\right)
+    \Rightarrow S_{appendS}(n + m) \in O(1)
+\end{align*}
+
+%==============================================================================
+
+\subsection{Función reduceS}
+
+Sea $n$ la longitud de la lista que recibe \texttt{reduceS} como argumento.
+
+\subsubsection{Trabajo:}
+
+La recurrencia para el trabajo de \texttt{reduceS} la podemos expresar de
+la siguiente manera:
+
+\begin{equation*}
+    W_{reduceS}(n) = W_{contract}(n) + W_{reduceS}(\frac{n}{2}) + W_{lengthS}(n) + k
+\end{equation*}
+
+Primero debemos saber que orden tiene la función \texttt{contract}, su recurrencia
+tiene la forma:
+
+\begin{equation*}
+    W_{contract}(n) = W_{tabulateS}(f \; n) + W_{lengthS}(n) + k
+\end{equation*}
+
+\subsubsection{Profundidad:}
+
+%==============================================================================
+
+\subsection{Función scanS}
+\subsubsection{Trabajo:}
+
+\subsubsection{Profundidad:}
 
 \end{document}

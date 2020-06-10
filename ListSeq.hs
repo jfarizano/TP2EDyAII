@@ -1,6 +1,5 @@
 import Seq
 import Par
-import TestTree
 import Prelude hiding (map, filter, append, take, drop, scan, fromList)
 
 instance Seq [] where
@@ -45,7 +44,6 @@ filter f (x:xs) = let (y, ys) = f x ||| filter f xs
 
 append :: [a] -> [a] -> [a]
 append [] ys     = ys
-append [x] ys    = x:ys
 append (x:xs) ys = x:(append xs ys)
 
 take :: [a] -> Int -> [a]
@@ -82,7 +80,7 @@ contract f (x:y:xs) = let (z, zs) = f x y ||| contract f xs
 
 reduce :: (a -> a -> a) -> a -> [a] -> a
 reduce _ e [] = e
-reduce _ _ [x] = x
+reduce f e [x] = f e x
 reduce f e xs = let ys = contract f xs
                 in reduce f e ys
 
