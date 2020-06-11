@@ -46,7 +46,7 @@ Demostramos por inducción que $ W_{mapS} \in O\left(\displaystyle\sum_{i=0}^{n 
 
 \begin{align*}
     W_{mapS}(n) & = W_f(x_{n - 1}) + W_{mapS}(n - 1) + k \\
-               & \leq W_f(x_{n - 1}) + c \cdot (\displaystyle\sum_{i=0}^{n - 2}W_f(x_i) - k) + k \rightarrow \text{HI} \\
+               & \leq W_f(x_{n - 1}) + c \cdot \left(\displaystyle\sum_{i=0}^{n - 2}W_f(x_i) - k\right) + k \rightarrow \text{HI} \\
                & \leq c \cdot  W_f(x_{n - 1}) + c \cdot \displaystyle\sum_{i=0}^{n - 2}W_f(x_i) - c \cdot k + k \\
                & \leq c \cdot \displaystyle\sum_{i=0}^{n - 1}W_f(x_i) \iff c \geq 1
 \end{align*}
@@ -182,9 +182,61 @@ concluir que $S_{reduceS} \in O(n)$.
 %==============================================================================
 
 \subsection{Función scanS}
+
+Sea $n$ la longitud de la lista que recibe \texttt{scanS} como argumento, y
+asumiendo que la función $f$ que toma es de orden constante, tenemos las
+siguientes recurrencias:
+
 \subsubsection{Trabajo:}
 
+Para el trabajo se tiene que:
+
+\begin{equation*}
+    W_{scanS}(n) = W_{scanS}(\frac{n}{2}) + W_{contract}(n) + W_{evenExpand}(n) + k
+\end{equation*}
+
+Donde $k$ es una constante. Como vimos anteriormente en \texttt{reduceS}, tenemos que
+$W_{contract}(n) \in O(n)$. Podemos ver que pasa lo mismo para la función \texttt{evenExpand}. 
+Sea $n$ lo suficientemente grande, entonces:
+
+\begin{equation*}
+    W_{evenExpand}(n) = W_{oddExpand}(n - 1) + k = W_{evenExpand}(n - 2) + k'
+\end{equation*}
+
+Donde es trivial que viendo esta última igualdad, $W_{evenExpand}(n) \in O(n)$.
+
+Luego, tenemos que:
+
+\begin{align*}
+    W_{scanS}(n) & = W_{scanS}(\frac{n}{2}) + W_{contract}(n) + W_{evenExpand}(n) + k \\
+                 & \leq W_{scanS}(\frac{n}{2}) + cn + c'n + k \\
+                 & = W_{scanS}(\frac{n}{2}) + (c + c')n + k
+\end{align*}
+
+Ahora observemos que esta recurrencia es similar a la obtenida para el 
+trabajo en \texttt{reduceS}, entonces utilizando el tercer caso del \textbf{Teorema Maestro} tomando
+$f(n) = (c + c')n$, $a = 1$ y $b = 2$, podemos concluir que $W_{scanS}(n) \in O(n)$. 
+
 \subsubsection{Profundidad:}
+
+La recurrencia para la profundidad nos queda expresada de la siguiente manera:
+
+\begin{equation*}
+    S_{scanS}(n) = S_{scanS}(\frac{n}{2}) + S_{contract}(n) + S_{evenExpand}(n) + k 
+\end{equation*}
+
+Sabemos que $S_{contract}(n) \in O(n)$ y podemos ver fácilmente que $S_{evenExpand} \in O(n)$:
+
+\begin{equation*}
+    S_{evenExpand}(n) = S_{oddExpand}(n - 1) + k = S_{evenExpand}(n - 2) + k'
+\end{equation*}
+
+Entonces, análogamente a la recurrencia del trabajo resuelta anteriormente se tiene
+que $S_{evenExpand}(n) \in O(n)$.
+
+
+Veamos que la recurrencia $S_{scanS}$ nos quedó igual a la del trabajo, entonces el
+razonamiento es análogo y podemos concluir que $S_{scanS} \in O(n)$.
 
 %==============================================================================
 %==============================================================================
@@ -307,7 +359,8 @@ La recurrencia para el trabajo de \texttt{reduceS} podemos expresarla de la sigu
 $S_{contract}(n) \in O\left(\displaystyle\max_{i=0}^{\frac{n}{2}}S_f(i)\right) $
 y como $f\in O(1)$ resulta $S_{contract}(n) \in O(1)$
 
-Sabiendo esto.. bla bla bla
+Sabiendo esto, podemos ver que:
+
 \begin{equation*}
     S_{reduceS}(n) =  S_{reduceS}(\frac{n}{2}) +  \underbrace{S_{contract}(n) }_{\in \; O(1)} +
     \underbrace{S_{length}(n)}_{\in \; O(1)} + k =  S_{reduceS}(\frac{n}{2}) + k'
@@ -328,8 +381,57 @@ Por lo tanto, $S_{reduceS}(n) \in O(\log{n})$.
 %==============================================================================
 
 \subsection{Función scanS}
+
+Sea $n$ la longitud de la lista que recibe \texttt{scanS} como argumento. El
+análisis de costos para esta función será parecido al de \texttt{reduceS}. Veamos
+cómo nos quedan las recurrencias:
+
 \subsubsection{Trabajo:}
 
+Para el trabajo la recurrencia nos queda expresada de la siguiente manera:
+
+\begin{equation*}
+    W_{scan}(n) = W_{scan}(\frac{n}{2}) + W_{contract}(n) + W_{expand}(n) + k
+\end{equation*}
+
+Donde $k$ es una constante. Ahora, razonando de forma análoga a \texttt{reduceS} sabemos 
+que \newline $W_{contract}(n) \in O(n)$. Luego, es fácil de ver que $W_{expand}(n) \in O(n)$. 
+Veamos cómo es su recurrencia:
+
+\begin{equation*}
+    W_{expand}(n) = W_{tabulateS}(f \; n) + k 
+\end{equation*}
+
+Como la función que se le pasa como argumento a \texttt{tabulateS} es de orden
+constante, sabiendo ya el costo de esta podemos decir que
+$W_{expand}(n) \in O(n)$.
+
+Entonces, sabiendo todo esto se tiene:
+
+\begin{align*}
+    W_{scan}(n) & = W_{scan}(\frac{n}{2}) + W_{contract}(n) + W_{expand}(n) + k \\
+                & \leq W_{scan}(\frac{n}{2}) + cn + c'n + k \\
+                & = W_{scan}(\frac{n}{2}) + (c + c')n + k 
+\end{align*}
+
+Entonces, usando el tercer caso del \textbf{Teorema Maestro} tomando $f(n) = (c+c')*n$, $a = 1$, $b = 2$, 
+estamos nuevamente en un caso similar a la función \texttt{reduceS} y podemos
+concluir que $W_{scanS} \in O(n)$. Observemos que para \texttt{scanS} también
+asumimos que la función que toma como argumento es de orden constante. 
+
 \subsubsection{Profundidad:}
+
+Para la profundidad tenemos la siguiente recurrencia:
+
+\begin{equation*}
+    S_{scanS} = S_{scanS}(\frac{n}{2}) + S_{contract}(n) + S_{expand}(n) + k
+\end{equation*}
+
+Observemos que tanto $S_{contract}(n)$ como $S_{expand}(n)$ son $O(1)$, pues
+para la función \texttt{contract} ya analizamos su costo en \texttt{reduceS} y en el 
+caso de \texttt{expand}, como  está definida en términos de \texttt{tabulateS}, que
+es $O(1)$, también resulta \texttt{expand} $\in O(1)$. Entonces, sabiendo todo esto, y observando de nuevo la recurrencia
+$S_{scanS}$, podemos ver que nos termina quedando similar a la de \texttt{reduceS}, entonces 
+resulta $S_{scanS} \in O(log(n))$.
 
 \end{document}

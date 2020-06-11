@@ -91,7 +91,7 @@ reduce f e a = case n of
 scan :: (a -> a -> a) -> a -> A.Arr a -> (A.Arr a, a)
 scan f e a = case n of
               0 -> (singletonS e, e)
-              1 -> (singletonS e, f e (a ! 0))
+              1 -> (singletonS e, f e (a ! 0))  
               _ -> let 
                     (b, x) = scan f e (contract f a)
                     c = expand f a b n
