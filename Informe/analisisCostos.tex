@@ -7,6 +7,8 @@
 \usepackage{textcomp}
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage{mathtools}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
 \setlength{\parindent}{0pt}
 
 
@@ -40,7 +42,7 @@ La recurrencia para el trabajo la podemos expresar de la siguiente manera:
     W_{mapS}(n) = W_f(x_{n- 1}) + W_{mapS}(n - 1) + k
 \end{equation*}
 
-Donde $k$ es una constante, y $x$ es la cabeza de la lista. \\
+Donde $k$ es una constante, y $x_{n - 1}$ es la cabeza de la lista. \\
 
 Demostramos por inducción que $ W_{mapS} \in O\left(\displaystyle\sum_{i=0}^{n - 1}W_f(x_i) - k\right) $
 
@@ -112,7 +114,7 @@ trabajo:
 \end{equation*}
 
 Es decir, tanto el trabajo como la profundidad de la función \texttt{appendS}
-son del orden de la suma de la longitud de ambas listas.
+son del orden de la longitud de la primera lista.
 
 %==============================================================================
 
@@ -123,7 +125,7 @@ Sea $n$ la longitud de la lista que \texttt{reduceS} recibe como argumento.
 La recurrencia para \texttt{reduceS} la podemos expresar de la siguiente manera
 (recordemos que se asume que la función que recibe como argumento es de orden constante):
 \begin{equation*}
-    W_{reduceS}(n) = W(\frac{n}{2}) + W_{contract}(n) + k
+    W_{reduceS}(n) = W_{reduceS}(\frac{n}{2}) + W_{contract}(n) + k
 \end{equation*}
 
 Ahora necesitamos saber que orden tiene $W_{contract}(n)$, observemos que su 
@@ -291,7 +293,7 @@ la siguiente manera:
 \end{equation*}
 
 Podemos ver fácilmente que la función que recibe \texttt{tabulateS} como
-argumento, es $O(1)$ ya que simplemente toma un índice y devuelve el 
+argumento es $O(1)$ ya que simplemente toma un índice y devuelve el 
 elemento de la lista que corresponde. Por lo tanto:
 
 \begin{align*}
@@ -318,7 +320,7 @@ Igualmente al trabajo $f \in O(1)$, por lo tanto:
 
 \subsection{Función reduceS}
 
-Sea $n$ la longitud de la lista que recibe \texttt{reduceS} como argumento, y $f$
+Sea $n$ la longitud del arreglo que recibe \texttt{reduceS} como argumento, y $f$
 una función de orden constante que toma la función como argumento.
 
 \subsubsection{Trabajo:}
@@ -346,7 +348,7 @@ $W_{contract}(n) \in O(n)$.
 
 \subsubsection{Profundidad:}
 
-La recurrencia para el trabajo de \texttt{reduceS} podemos expresarla de la siguiente manera:
+La recurrencia para la profundidad de \texttt{reduceS} podemos expresarla de la siguiente manera:
 
 \begin{equation*}
     S_{reduceS}(n) =  S_{reduceS}(\frac{n}{2}) + S_{contract}(n) + \underbrace{W_{length}(n)}_{\in \; O(1)} + k
@@ -382,7 +384,7 @@ Por lo tanto, $S_{reduceS}(n) \in O(\log{n})$.
 
 \subsection{Función scanS}
 
-Sea $n$ la longitud de la lista que recibe \texttt{scanS} como argumento. El
+Sea $n$ la longitud del arreglo que recibe \texttt{scanS} como argumento. El
 análisis de costos para esta función será parecido al de \texttt{reduceS}. Veamos
 cómo nos quedan las recurrencias:
 
@@ -432,6 +434,6 @@ para la función \texttt{contract} ya analizamos su costo en \texttt{reduceS} y 
 caso de \texttt{expand}, como  está definida en términos de \texttt{tabulateS}, que
 es $O(1)$, también resulta \texttt{expand} $\in O(1)$. Entonces, sabiendo todo esto, y observando de nuevo la recurrencia
 $S_{scanS}$, podemos ver que nos termina quedando similar a la de \texttt{reduceS}, entonces 
-resulta $S_{scanS} \in O(log(n))$.
+resulta $S_{scanS} \in O(\log{n})$.
 
 \end{document}
