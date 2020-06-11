@@ -44,17 +44,16 @@ La recurrencia para el trabajo la podemos expresar de la siguiente manera:
 
 Donde $k$ es una constante, y $x_{n - 1}$ es la cabeza de la lista. \\
 
-Demostramos por inducción que $ W_{mapS} \in O\left(\displaystyle\sum_{i=0}^{n - 1}W_f(x_i) - k\right) $
+Demostramos por inducción que $ W_{mapS} \in O\left(\displaystyle\sum_{i=0}^{n - 1}W_f(x_i)\right) $
 
 \begin{align*}
     W_{mapS}(n) & = W_f(x_{n - 1}) + W_{mapS}(n - 1) + k \\
-               & \leq W_f(x_{n - 1}) + c \cdot \left(\displaystyle\sum_{i=0}^{n - 2}W_f(x_i) - k\right) + k \rightarrow \text{HI} \\
+               & \leq W_f(x_{n - 1}) + c \cdot \left(\displaystyle\sum_{i=0}^{n - 2}W_f(x_i) - k\right) + k \rightarrow \text{HI (relajamos la hipótesis)} \\
                & \leq c \cdot  W_f(x_{n - 1}) + c \cdot \displaystyle\sum_{i=0}^{n - 2}W_f(x_i) - c \cdot k + k \\
                & \leq c \cdot \displaystyle\sum_{i=0}^{n - 1}W_f(x_i) \iff c \geq 1
 \end{align*}
 
-Por lo tanto como $ W_{mapS} \in O\left(\displaystyle\sum_{i=0}^{n - 1}W_f(x_i) - k\right) $,
-luego podemos decir que $ W_{mapS} \in O\left(\displaystyle\sum_{i=0}^{n - 1}W_f(x_i)\right) $
+Por lo tanto $ W_{mapS} \in O\left(\displaystyle\sum_{i=0}^{n - 1}W_f(x_i)\right) $.
 
 \subsubsection{Profundidad:}
 
@@ -97,7 +96,7 @@ Podemos demostrar fácilmente por inducción que $W \in O(n)$:
 
 \begin{align*}
     W_{appendS}(n) & = W_{appendS}(n - 1) + k \\
-             & \leq c(n - 1) + k \rightarrow \text{HI}\\
+             & \leq c \cdot (n - 1) + k \rightarrow \text{HI}\\
              & \leq c \cdot n - c + k \\
              & \leq c \cdot n \iff c \geq k
 \end{align*}
@@ -125,6 +124,13 @@ Sea $n$ la longitud de la lista que \texttt{reduceS} recibe como argumento.
 La recurrencia para \texttt{reduceS} la podemos expresar de la siguiente manera
 (recordemos que se asume que la función que recibe como argumento es de orden constante):
 \begin{equation*}
+    W_{reduceS}(n) = W_{reduceS}(\ceil*{\frac{n}{2}}) + W_{contract}(n) + k
+\end{equation*}
+
+Siendo que $\frac{n}{2}$ es una función suave, consideramos solo potencias de 2
+y obtenemos (tenemos en cuenta esto cada vez que en una recurrencia se encuentre
+$\frac{n}{2}$):
+\begin{equation*}
     W_{reduceS}(n) = W_{reduceS}(\frac{n}{2}) + W_{contract}(n) + k
 \end{equation*}
 
@@ -139,9 +145,9 @@ Podemos demostrar que $W_{contract} \in O(n)$:
 
 \begin{align*}
     W_{contract}(n) & = W_{contract}(n - 2) + k \\
-             & \leq c(n - 2) + k \rightarrow \text{HI}\\
-             & \leq cn - 2c + k \\
-             & \leq cn \iff c \geq \frac{k}{2}
+             & \leq c \cdot (n - 2) + k \rightarrow \text{HI}\\
+             & \leq c \cdot n - 2c + k \\
+             & \leq c \cdot n \iff c \geq \frac{k}{2}
 \end{align*}
 
 Ahora, utilizando el tercer caso del \textbf{Teorema Maestro} podemos probar que
@@ -262,7 +268,7 @@ La recurrencia para el trabajo de la función \texttt{mapS} la podemos
 expresar como sigue:
 
 \begin{equation*}
-    W_{mapS}(f \; n) = W_{tabulate}(f \; n) + \underbrace{W_{length}(n)}_{\in \; O(1)} + k
+    W_{mapS}(f \; n) = W_{tabulate}(f \; n) + \underbrace{W_{lengthS}(n)}_{\in \; O(1)} + k
 \end{equation*} 
 
 Por lo tanto $ W_{mapS}(f \; n) \in O\left(\displaystyle\sum_{i=0}^{n - 1}W_f(i)\right) $
@@ -272,7 +278,7 @@ Por lo tanto $ W_{mapS}(f \; n) \in O\left(\displaystyle\sum_{i=0}^{n - 1}W_f(i)
 Luego, para la profundidad tenemos la siguiente recurrencia:
 
 \begin{equation*}
-    S_{mapS}(f \; n) = S_{tabulate}(f \; n) + \underbrace{S_{length}(n)}_{\in \; O(1)} + k
+    S_{mapS}(f \; n) = S_{tabulate}(f \; n) + \underbrace{S_{lengthS}(n)}_{\in \; O(1)} + k
 \end{equation*} 
 
 Por lo tanto $ S_{mapS}(f \; n) \in O\left(\displaystyle\max_{i=0}^{n - 1}S_f(i)\right) $
@@ -288,8 +294,8 @@ Podemos expresar la recurrencia para el trabajo de \texttt{appendS} de
 la siguiente manera:
 
 \begin{equation*}
-    W_{appendS}(n + m) = W_{tabulate}(f \; (n \; +\; m)) + \underbrace{W_{length}(n)}_{\in \; O(1)}
-    + \underbrace{W_{length}(m)}_{\in \; O(1)} + k
+    W_{appendS}(n + m) = W_{tabulate}(f \; (n \; +\; m)) + \underbrace{W_{lengthS}(n)}_{\in \; O(1)}
+    + \underbrace{W_{lengthS}(m)}_{\in \; O(1)} + k
 \end{equation*}
 
 Podemos ver fácilmente que la función que recibe \texttt{tabulateS} como
@@ -306,11 +312,11 @@ Podemos expresar la recurrencia para la profundidad de \texttt{appendS} de
 la siguiente manera:
 
 \begin{equation*}
-    S_{appendS}(n + m) = S_{tabulate}(f \; (n \; +\; m)) + \underbrace{S_{length}(n)}_{\in \; O(1)}
-    + \underbrace{S_{length}(m)}_{\in \; O(1)} + k
+    S_{appendS}(n + m) = S_{tabulate}(f \; (n \; +\; m)) + \underbrace{S_{lengthS}(n)}_{\in \; O(1)}
+    + \underbrace{S_{lengthS}(m)}_{\in \; O(1)} + k
 \end{equation*}
 
-Igualmente al trabajo $f \in O(1)$, por lo tanto:
+Igualmente al trabajo, $S_f \in O(1)$, por lo tanto:
 \begin{align*}
     S_{appendS}(n + m) \in O\left(\displaystyle\max_{i=0}^{n + m - 1}S_f(i)\right)
     \Rightarrow S_{appendS}(n + m) \in O(1)
@@ -329,43 +335,43 @@ La recurrencia para el trabajo de \texttt{reduceS} la podemos expresar de
 la siguiente manera:
 
 \begin{equation*}
-    W_{reduceS}(n) =  W_{reduceS}(\frac{n}{2}) + W_{contract}(n) + \underbrace{W_{length}(n)}_{\in \; O(1)} + k
+    W_{reduceS}(n) =  W_{reduceS}(\frac{n}{2}) + W_{contract}(n) + \underbrace{W_{lengthS}(n)}_{\in \; O(1)} + k
 \end{equation*}
 
 Primero debemos saber que orden tiene la función \texttt{contract}, su recurrencia
 tiene la forma:
 
 \begin{equation*}
-    W_{contract}(n) = W_{tabulateS}(f \; \frac{n}{2}) + \underbrace{W_{length}(n)}_{\in \; O(1)} + k
+    W_{contract}(n) = W_{tabulateS}(f \; \frac{n}{2}) + \underbrace{W_{lengthS}(n)}_{\in \; O(1)} + k
 \end{equation*}
 
-Por lo tanto, $W_{contract}(n) \in O\left(\displaystyle\sum_{i=0}^{\frac{n}{2}}W_f(i)\right) $
+Por lo tanto, $W_{contract}(n) \in O\left(\displaystyle\sum_{i=0}^{\ceil*{\frac{n}{2}}}W_f(i)\right) $
 y como $f\in O(1)$ resulta $W_{contract}(n) \in O(n)$
 
 Ahora utilizando el tercer caso del \textbf{Teorema Maestro}, podemos 
 demostrar de forma análoga a la función equivalente en listas que
-$W_{contract}(n) \in O(n)$.
+$W_{reduceS}(n) \in O(n)$.
 
 \subsubsection{Profundidad:}
 
 La recurrencia para la profundidad de \texttt{reduceS} podemos expresarla de la siguiente manera:
 
 \begin{equation*}
-    S_{reduceS}(n) =  S_{reduceS}(\frac{n}{2}) + S_{contract}(n) + \underbrace{W_{length}(n)}_{\in \; O(1)} + k
+    S_{reduceS}(n) =  S_{reduceS}(\frac{n}{2}) + S_{contract}(n) + \underbrace{W_{lengthS}(n)}_{\in \; O(1)} + k
 \end{equation*}
 
 \begin{equation*}
-    S_{contract}(n) = S_{tabulateS}(f \; \frac{n}{2}) + \underbrace{S_{length}(n)}_{\in \; O(1)} + k
+    S_{contract}(n) = S_{tabulateS}(f \; \frac{n}{2}) + \underbrace{S_{lengthS}(n)}_{\in \; O(1)} + k
 \end{equation*}
 
-$S_{contract}(n) \in O\left(\displaystyle\max_{i=0}^{\frac{n}{2}}S_f(i)\right) $
+$S_{contract}(n) \in O\left(\displaystyle\max_{i=0}^{\ceil*{\frac{n}{2}}}S_f(i)\right) $
 y como $f\in O(1)$ resulta $S_{contract}(n) \in O(1)$
 
 Sabiendo esto, podemos ver que:
 
 \begin{equation*}
     S_{reduceS}(n) =  S_{reduceS}(\frac{n}{2}) +  \underbrace{S_{contract}(n) }_{\in \; O(1)} +
-    \underbrace{S_{length}(n)}_{\in \; O(1)} + k =  S_{reduceS}(\frac{n}{2}) + k'
+    \underbrace{S_{lengthS}(n)}_{\in \; O(1)} + k =  S_{reduceS}(\frac{n}{2}) + k'
 \end{equation*}
 
 Demostramos por inducción que $S_{reduceS}(n) \in O(\log{n})$
@@ -392,11 +398,12 @@ cómo nos quedan las recurrencias:
 
 Para el trabajo la recurrencia nos queda expresada de la siguiente manera:
 
-\begin{equation*}
-    W_{scan}(n) = W_{scan}(\frac{n}{2}) + W_{contract}(n) + W_{expand}(n) + k
-\end{equation*}
+\begin{align*}
+    W_{scanS}(n) & = W_{scanS}(\frac{n}{2}) + W_{contract}(n) + W_{expand}(n) + \underbrace{W_{lengthS}(n)}_{\in \; O(1)} + k \\
+                & = W_{scanS}(\frac{n}{2}) + W_{contract}(n) + W_{expand}(n) + k'
+\end{align*}
 
-Donde $k$ es una constante. Ahora, razonando de forma análoga a \texttt{reduceS} sabemos 
+Donde $k$ y $k'$ son constantes. Ahora, razonando de forma análoga a \texttt{reduceS} sabemos 
 que \newline $W_{contract}(n) \in O(n)$. Luego, es fácil de ver que $W_{expand}(n) \in O(n)$. 
 Veamos cómo es su recurrencia:
 
@@ -411,12 +418,12 @@ $W_{expand}(n) \in O(n)$.
 Entonces, sabiendo todo esto se tiene:
 
 \begin{align*}
-    W_{scan}(n) & = W_{scan}(\frac{n}{2}) + W_{contract}(n) + W_{expand}(n) + k \\
-                & \leq W_{scan}(\frac{n}{2}) + cn + c'n + k \\
-                & = W_{scan}(\frac{n}{2}) + (c + c')n + k 
+    W_{scanS}(n) & = W_{scaSn}(\frac{n}{2}) + W_{contract}(n) + W_{expand}(n) + k \\
+                & \leq W_{scanS}(\frac{n}{2}) + cn + c'n + k \\
+                & = W_{scanS}(\frac{n}{2}) + (c + c')n + k 
 \end{align*}
 
-Entonces, usando el tercer caso del \textbf{Teorema Maestro} tomando $f(n) = (c+c')*n$, $a = 1$, $b = 2$, 
+Entonces, usando el tercer caso del \textbf{Teorema Maestro} tomando $f(n) = (c+c') \cdot n$, $a = 1$, $b = 2$, 
 estamos nuevamente en un caso similar a la función \texttt{reduceS} y podemos
 concluir que $W_{scanS} \in O(n)$. Observemos que para \texttt{scanS} también
 asumimos que la función que toma como argumento es de orden constante. 

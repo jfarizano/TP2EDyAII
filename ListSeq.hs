@@ -39,11 +39,12 @@ map f (x:xs) = let (y, ys) = f x ||| map f xs
 
 filter :: (a -> Bool) -> [a] -> [a]
 filter _ []     = []
-filter f (x:xs) = let (y, ys) = f x ||| filter f xs
-                  in if y then x:ys else ys
+filter f (x:xs) = let (bool, ys) = f x ||| filter f xs
+                  in if bool then x:ys else ys
 
 append :: [a] -> [a] -> [a]
 append [] ys     = ys
+append _ []      = []
 append (x:xs) ys = x:(append xs ys)
 
 take :: [a] -> Int -> [a]

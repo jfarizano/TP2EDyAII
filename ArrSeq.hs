@@ -69,7 +69,7 @@ showl a = case n of
 
 contractAux :: (a -> a -> a) -> Int -> Int -> A.Arr a -> a
 contractAux f n i a = if odd n && (2 * i) == (n - 1)  then a ! (n - 1)
-            else f (a ! (2 * i)) (a ! (2 * i + 1))
+                      else f (a ! (2 * i)) (a ! (2 * i + 1))
 
 contract :: (a -> a -> a) -> A.Arr a -> A.Arr a
 contract f a = case n of
