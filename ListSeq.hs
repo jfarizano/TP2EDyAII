@@ -92,7 +92,7 @@ evenExpand f xs l@(y:ys) = y : (oddExpand f xs l)
 oddExpand :: (a -> a -> a) -> [a] -> [a] -> [a]
 oddExpand _ _ [] = []
 oddExpand _ [] _ = []
-oddExpand f [x] _ = []
+oddExpand _ [x] _ = []
 oddExpand f (x:_:xs) (y:ys) = (f y x) : (evenExpand f xs ys)
 
 scan :: (a -> a -> a) -> a -> [a] -> ([a], a)

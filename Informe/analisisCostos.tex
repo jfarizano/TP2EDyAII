@@ -78,27 +78,29 @@ $ S_{mapS} \in O\left(\displaystyle\sum_{i=0}^{n - 1}S_f(x_i)\right) $.
 
 \subsection{Función appendS}
 
-Sean $n$ y $m$ las longitudes de las listas que recibe como argumento
-la función \texttt{appendS}. 
+Sean $n$ la longitud de la primer lista que recibe como argumento la función \texttt{appendS}.
+Observemos, que tanto el trabajo como la profundidad se realizan con respecto $n$
+ya que es la lista que vamos consumiendo en cada llamada recursiva.
+ 
 \subsubsection{Trabajo:}
 Podemos ver que la recurrencia para el trabajo nos queda expresada como:
 
 \begin{equation*}
-    W_{appendS}(n + m) = W_{appendS}(n + m - 1) + k
+    W_{appendS}(n) = W_{appendS}(n - 1) + k
 \end{equation*}
 
 Donde $k$ es una constante. \\
 
-Podemos demostrar fácilmente por inducción que $W \in O(n+m)$:
+Podemos demostrar fácilmente por inducción que $W \in O(n)$:
 
 \begin{align*}
-    W_{appendS}(n + m) & = W_{appendS}(n + m - 1) + k \\
-             & \leq c(n + m - 1) + k \rightarrow \text{HI}\\
-             & \leq c(n + m) - c + k \\
-             & \leq c(n + m) \iff c \geq k
+    W_{appendS}(n) & = W_{appendS}(n - 1) + k \\
+             & \leq c(n - 1) + k \rightarrow \text{HI}\\
+             & \leq c \cdot n - c + k \\
+             & \leq c \cdot n \iff c \geq k
 \end{align*}
 
-Por lo tanto $W_{appendS} \in O(n + m)$ \\
+Por lo tanto $W_{appendS} \in O(n)$ \\
 
 \subsubsection{Profundidad:}
 
@@ -106,7 +108,7 @@ Para la profundidad, la recurrencia nos queda expresada igual que la del
 trabajo:
 
 \begin{equation*}
-    S_{appendS}(n + m) = S_{appendS}(n + m - 1) + k \; \; \in O(n + m)
+    S_{appendS}(n) = S_{appendS}(n - 1) + k \; \; \in O(n)
 \end{equation*}
 
 Es decir, tanto el trabajo como la profundidad de la función \texttt{appendS}
@@ -154,7 +156,7 @@ Sean $a = 1, \; b = 2$ y $f(n) = W_{contract}(n)$
            podemos tomar $c = \frac{1}{2}$ y $N = 1$ y se cumple: $\frac{n}{2} \leq \frac{1}{2}n$. 
 \end{itemize}
 
-Entonces, como se cumplen las hipótesis del tercer caso Teorema Maestro,
+Entonces, como se cumplen las hipótesis del caso mencionado,
 podemos decir que $W_{reduceS} \in O(f(n))$ y como $f(n) \in O(n)$, por transitividad,
 resulta $W_{reduceS} \in O(n)$. \\
 
@@ -264,7 +266,8 @@ Igualmente al trabajo $f \in O(1)$, por lo tanto:
 
 \subsection{Función reduceS}
 
-Sea $n$ la longitud de la lista que recibe \texttt{reduceS} como argumento.
+Sea $n$ la longitud de la lista que recibe \texttt{reduceS} como argumento, y $f$
+una función de orden constante que toma la función como argumento.
 
 \subsubsection{Trabajo:}
 
@@ -272,17 +275,55 @@ La recurrencia para el trabajo de \texttt{reduceS} la podemos expresar de
 la siguiente manera:
 
 \begin{equation*}
-    W_{reduceS}(n) = W_{contract}(n) + W_{reduceS}(\frac{n}{2}) + W_{lengthS}(n) + k
+    W_{reduceS}(n) =  W_{reduceS}(\frac{n}{2}) + W_{contract}(n) + \underbrace{W_{length}(n)}_{\in \; O(1)} + k
 \end{equation*}
 
 Primero debemos saber que orden tiene la función \texttt{contract}, su recurrencia
 tiene la forma:
 
 \begin{equation*}
-    W_{contract}(n) = W_{tabulateS}(f \; n) + W_{lengthS}(n) + k
+    W_{contract}(n) = W_{tabulateS}(f \; \frac{n}{2}) + \underbrace{W_{length}(n)}_{\in \; O(1)} + k
 \end{equation*}
 
+Por lo tanto, $W_{contract}(n) \in O\left(\displaystyle\sum_{i=0}^{\frac{n}{2}}W_f(i)\right) $
+y como $f\in O(1)$ resulta $W_{contract}(n) \in O(n)$
+
+Ahora utilizando el tercer caso del \textbf{Teorema Maestro}, podemos 
+demostrar de forma análoga a la función equivalente en listas que
+$W_{contract}(n) \in O(n)$.
+
 \subsubsection{Profundidad:}
+
+La recurrencia para el trabajo de \texttt{reduceS} podemos expresarla de la siguiente manera:
+
+\begin{equation*}
+    S_{reduceS}(n) =  S_{reduceS}(\frac{n}{2}) + S_{contract}(n) + \underbrace{W_{length}(n)}_{\in \; O(1)} + k
+\end{equation*}
+
+\begin{equation*}
+    S_{contract}(n) = S_{tabulateS}(f \; \frac{n}{2}) + \underbrace{S_{length}(n)}_{\in \; O(1)} + k
+\end{equation*}
+
+$S_{contract}(n) \in O\left(\displaystyle\max_{i=0}^{\frac{n}{2}}S_f(i)\right) $
+y como $f\in O(1)$ resulta $S_{contract}(n) \in O(1)$
+
+Sabiendo esto.. bla bla bla
+\begin{equation*}
+    S_{reduceS}(n) =  S_{reduceS}(\frac{n}{2}) +  \underbrace{S_{contract}(n) }_{\in \; O(1)} +
+    \underbrace{S_{length}(n)}_{\in \; O(1)} + k =  S_{reduceS}(\frac{n}{2}) + k'
+\end{equation*}
+
+Demostramos por inducción que $S_{reduceS}(n) \in O(\log{n})$
+
+\begin{align*}
+    S_{reduceS}(n) & = S_{reduceS}(\frac{n}{2}) + k' \\
+                   & \leq c \cdot log{\frac{n}{2}} + k' \rightarrow HI\\
+                   & = c \cdot \log{n} - c \cdot \underbrace{\log{2}}_{= 1} + k' \\
+                   & = c \cdot \log{n} - c + k' \\
+                   & \leq c \cdot \log{n} \iff c \geq k'
+\end{align*}
+
+Por lo tanto, $S_{reduceS}(n) \in O(\log{n})$.
 
 %==============================================================================
 

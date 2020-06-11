@@ -67,14 +67,14 @@ showl a = case n of
             _ -> CONS (a ! 0) (drop a 1)
             where n = lengthS a
 
-g :: (a -> a -> a) -> Int -> Int -> A.Arr a -> a
-g f n i a = if odd n && (2 * i) == (n - 1)  then a ! (n - 1)
+contractAux :: (a -> a -> a) -> Int -> Int -> A.Arr a -> a
+contractAux f n i a = if odd n && (2 * i) == (n - 1)  then a ! (n - 1)
             else f (a ! (2 * i)) (a ! (2 * i + 1))
 
 contract :: (a -> a -> a) -> A.Arr a -> A.Arr a
 contract f a = case n of
                   1 -> a
-                  _ -> tabulateS (\i -> g f n i a) mid
+                  _ -> tabulateS (\i -> contractAux f n i a) mid
                 where n = lengthS a
                       mid = if even n then (div n 2) else (div n 2) + 1
 
